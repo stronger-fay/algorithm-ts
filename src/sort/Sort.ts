@@ -1,11 +1,6 @@
-
-interface Comparable<T> {
-  compareTo: (element: T) => number
-}
-
-export abstract class Sort<T extends Comparable<T>> {
+export abstract class Sort {
   protected name: string;
-  protected array: Array<T>;
+  protected array: Array<number>;
   private cmpCount: number;
   private swapCount: number;
   private time: number;
@@ -19,7 +14,7 @@ export abstract class Sort<T extends Comparable<T>> {
     this.time = 0;
   }
 
-  sort(array: T[]) {
+  sort(array: number[]) {
     if (!array || array === null || array.length < 2) return;
 
     this.array = array;
@@ -40,13 +35,15 @@ export abstract class Sort<T extends Comparable<T>> {
   cmp(index1: number, index2: number): number {
     this.cmpCount++;
 
-    return this.array[index1].compareTo(this.array[index2]);
+    const element1 = this.array[index1];
+    const element2 = this.array[index2];
+    return element1 - element2;
   }
 
-  cmpElement(element1: T, element2: T): number {
+  cmpElement(element1: number, element2: number): number {
     this.cmpCount++;
 
-    return element1.compareTo(element2);
+    return element1 - element2;
   }
 
   /**
@@ -82,9 +79,6 @@ export abstract class Sort<T extends Comparable<T>> {
       + timeStr + " \t"
       + compareCountStr + "\t "
       + swapCountStr + "\n"
-      // + this.array + "\n"
       + "------------------------------------------------------------------";
   }
-
-
 }

@@ -1,34 +1,24 @@
 import { Integers, Times, Asserts } from './tools'
+import { Sort, BubbleSort } from './sort';
 
-// import Integers = require('./tools/Integers');
-// import Asserts = require('./tools/Asserts');
-// import Times = require('./tools/Times');
+const testSorts = (array: number[], ...sorts: Sort[]) => {
+  sorts.forEach((sort: Sort) => {
+    const newArray = [...array];
+    sort.sort(newArray);
+    Asserts.test(Integers.isAscOrder(newArray));
+  });
 
-import Sort = require('./sort/Sort');
-
-// const BubbleSort = require('./sort/cmp/BubbleSort.js');
-// const SelectionSort = require('./sort/cmp/SelectionSort.js');
-// const HeapSort = require('./sort/cmp/HeapSort.js');
-
-
-
-
-
-// const testSorts = (array = [], ...sorts) => {
-//   sorts.forEach(sort => {
-//     const newArray = [...array];
-//     sort.sort(newArray);
-//     // Asserts.test(Integers.isAscOrder(newArray));
-//   });
-
-//   sorts.forEach(sort => {
-//     console.log(sort.toString());
-//   })
-// }
+  sorts.forEach((sort: Sort) => {
+    console.log(sort.toString());
+  })
+}
 
 
-const array = Integers.random(10, 0, 20000);
-
-console.log('array: ', array);
-
-// testSorts(array, new BubbleSort(), new SelectionSort(), new HeapSort());
+const array: number[] = Integers.random(10, 0, 100);
+console.log('origin array: ', array);
+testSorts(
+  array,
+  new BubbleSort(),
+  // new SelectionSort(),
+  // new HeapSort(),
+);

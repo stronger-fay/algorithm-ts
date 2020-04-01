@@ -25,11 +25,13 @@ class Sort {
        */
     cmp(index1, index2) {
         this.cmpCount++;
-        return this.array[index1].compareTo(this.array[index2]);
+        const element1 = this.array[index1];
+        const element2 = this.array[index2];
+        return element1 - element2;
     }
     cmpElement(element1, element2) {
         this.cmpCount++;
-        return element1.compareTo(element2);
+        return element1 - element2;
     }
     /**
      * 交换元素
@@ -60,7 +62,6 @@ class Sort {
             + timeStr + " \t"
             + compareCountStr + "\t "
             + swapCountStr + "\n"
-            // + this.array + "\n"
             + "------------------------------------------------------------------";
     }
 }
