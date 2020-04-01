@@ -1,5 +1,5 @@
 import { Integers, Times, Asserts } from './tools'
-import { Sort, BubbleSort } from './sort';
+import { Sort, BubbleSort, SelectionSort } from './sort';
 
 const testSorts = (array: number[], ...sorts: Sort[]) => {
   sorts.forEach((sort: Sort) => {
@@ -19,6 +19,6 @@ console.log('origin array: ', array);
 testSorts(
   array,
   new BubbleSort(),
-  // new SelectionSort(),
+  new SelectionSort(),
   // new HeapSort(),
 );
