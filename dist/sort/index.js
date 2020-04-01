@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const Sort_1 = require("./Sort");
+exports.Sort = Sort_1.Sort;
 const BubbleSort_1 = require("./BubbleSort");
 exports.BubbleSort = BubbleSort_1.BubbleSort;
 const SelectionSort_1 = require("./SelectionSort");
 exports.SelectionSort = SelectionSort_1.SelectionSort;
-const Sort_1 = require("./Sort");
-exports.Sort = Sort_1.Sort;
+const HeapSort_1 = require("./HeapSort");
+exports.HeapSort = HeapSort_1.HeapSort;

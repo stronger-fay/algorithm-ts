@@ -1,9 +1,11 @@
+import { Sort } from './Sort';
 import { BubbleSort } from './BubbleSort';
 import { SelectionSort } from './SelectionSort';
-import { Sort } from './Sort';
+import { HeapSort } from './HeapSort';
 
 export {
   Sort,
   BubbleSort,
   SelectionSort,
+  HeapSort,
 };
