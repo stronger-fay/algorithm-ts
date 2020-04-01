@@ -31,18 +31,28 @@ export class InsertionSort extends Sort {
       let index = begin;
 
 
-      // 方法1
-      while (index > 0 && this.cmp(index, index - 1) < 0) {
-        this.swap(index, index - 1);
+      // 版本一
+      // while (index > 0 && this.cmp(index, index - 1) < 0) {
+      //   this.swap(index, index - 1);
+      //   index--;
+      // }
+
+
+      /**
+       * 版本二 （将交换替换为挪动）
+       * 
+       * ◼ 思路是将【交换】转为【挪动】
+       * 1 先将待插入的元素备份
+       * 2 头部有序数据中比待插入元素大的，都朝尾部方向挪动1个位置
+       * 3 将待插入元素放到最终的合适位置
+       */
+      const value = this.array[index];
+      while (index > 0 && this.cmpElement(value, this.array[index - 1]) < 0) {
+        this.array[index] = this.array[index - 1];
         index--;
       }
+      this.array[index] = value;
 
-      // 方法2
-      // for (let index = begin; index > 0; index--) {
-      //   if (this.cmp(index, index - 1) < 0) {
-      //     this.swap(index, index - 1);
-      //   }
-      // }
     }
   }
 }
