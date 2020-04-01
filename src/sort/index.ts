@@ -4,6 +4,7 @@ import { SelectionSort } from './SelectionSort';
 import { HeapSort } from './HeapSort';
 import { InsertionSort } from './InsertionSort';
 import { MergeSort } from './MergeSort';
+import { QuickSort } from './QuickSort';
 
 export {
   Sort,
@@ -12,4 +13,5 @@ export {
   HeapSort,
   InsertionSort,
   MergeSort,
+  QuickSort,
 };

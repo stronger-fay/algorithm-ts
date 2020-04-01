@@ -1,5 +1,5 @@
 import { Sort } from './Sort';
-import { BinarySearch } from '../BinarySearch';
+
 /**
  * 插入排序
  * 执行流程(升序)

@@ -12,3 +12,5 @@ const InsertionSort_1 = require("./InsertionSort");
 exports.InsertionSort = InsertionSort_1.InsertionSort;
 const MergeSort_1 = require("./MergeSort");
 exports.MergeSort = MergeSort_1.MergeSort;
+const QuickSort_1 = require("./QuickSort");
+exports.QuickSort = QuickSort_1.QuickSort;

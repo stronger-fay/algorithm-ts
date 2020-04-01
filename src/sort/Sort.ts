@@ -81,4 +81,12 @@ export abstract class Sort {
       + swapCountStr + "\n"
       + "------------------------------------------------------------------";
   }
+
+  // isStable() :boolean {
+  // 	// if (this instanceof RadixSort) return true;
+  // 	// if (this instanceof CountingSort) return true;
+  // 	// if (this instanceof ShellSort) return false;
+  // 	if (this instanceof SelectionSort) return false;
+  // 	return true;
+  // }
 }
