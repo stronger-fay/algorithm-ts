@@ -8,3 +8,5 @@ const SelectionSort_1 = require("./SelectionSort");
 exports.SelectionSort = SelectionSort_1.SelectionSort;
 const HeapSort_1 = require("./HeapSort");
 exports.HeapSort = HeapSort_1.HeapSort;
+const InsertionSort_1 = require("./InsertionSort");
+exports.InsertionSort = InsertionSort_1.InsertionSort;

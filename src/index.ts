@@ -1,5 +1,5 @@
 import { Integers, Times, Asserts } from './tools'
-import { Sort, BubbleSort, SelectionSort, HeapSort } from './sort';
+import { Sort, BubbleSort, SelectionSort, HeapSort, InsertionSort } from './sort';
 
 const testSorts = (array: number[], ...sorts: Sort[]) => {
   sorts.forEach((sort: Sort) => {
@@ -21,4 +21,5 @@ testSorts(
   new BubbleSort(),
   new SelectionSort(),
   new HeapSort(),
+  new InsertionSort(),
 );
