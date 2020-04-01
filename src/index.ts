@@ -14,8 +14,8 @@ const testSorts = (array: number[], ...sorts: Sort[]) => {
 }
 
 
-const array: number[] = Integers.random(10, 0, 100);
-console.log('origin array: ', array);
+const array: number[] = Integers.random(10000, 0, 20000);
+// console.log('origin array: ', array);
 testSorts(
   array,
   new BubbleSort(),

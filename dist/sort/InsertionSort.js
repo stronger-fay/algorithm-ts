@@ -26,8 +26,8 @@ class InsertionSort extends Sort_1.Sort {
     }
     reallySort() {
         for (let begin = 1; begin < this.array.length; begin++) {
-            let index = begin;
             // 版本一
+            // let index = begin;
             // while (index > 0 && this.cmp(index, index - 1) < 0) {
             //   this.swap(index, index - 1);
             //   index--;
@@ -40,13 +40,50 @@ class InsertionSort extends Sort_1.Sort {
              * 2 头部有序数据中比待插入元素大的，都朝尾部方向挪动1个位置
              * 3 将待插入元素放到最终的合适位置
              */
-            const value = this.array[index];
-            while (index > 0 && this.cmpElement(value, this.array[index - 1]) < 0) {
-                this.array[index] = this.array[index - 1];
-                index--;
-            }
-            this.array[index] = value;
+            // let index = begin;
+            // const value = this.array[index];
+            // while (index > 0 && this.cmpElement(value, this.array[index - 1]) < 0) {
+            //   this.array[index] = this.array[index - 1];
+            //   index--;
+            // }
+            // this.array[index] = value;
+            /**
+             * 版本三 （将插入过程，换成二分搜索）
+             */
+            this.insert(begin, this.search(begin));
         }
+    }
+    /**
+     * 将source位置的元素插入到destIndex位置
+     * @param source 要插入的元素
+     * @param destIndex  插入位置
+     */
+    insert(sourceIndex, destIndex) {
+        const v = this.array[sourceIndex];
+        for (let index = sourceIndex; index > destIndex; index--) {
+            this.array[index] = this.array[index - 1];
+        }
+        this.array[destIndex] = v;
+    }
+    /**
+     * 利用二分搜索找到 index 位置元素的待插入位置
+     * 已经排好序数组的区间范围是 [0, index)
+     * @param index
+     * @return
+     */
+    search(index) {
+        let begin = 0;
+        let end = index;
+        while (begin < end) {
+            const mid = Math.floor((begin + end) / 2);
+            if (this.cmp(index, mid) < 0) {
+                end = mid;
+            }
+            else {
+                begin = mid + 1;
+            }
+        }
+        return begin;
     }
 }
 exports.InsertionSort = InsertionSort;

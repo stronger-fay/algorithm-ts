@@ -12,6 +12,6 @@ const testSorts = (array, ...sorts) => {
         console.log(sort.toString());
     });
 };
-const array = tools_1.Integers.random(10, 0, 100);
-console.log('origin array: ', array);
+const array = tools_1.Integers.random(10000, 0, 20000);
+// console.log('origin array: ', array);
 testSorts(array, new sort_1.BubbleSort(), new sort_1.SelectionSort(), new sort_1.HeapSort(), new sort_1.InsertionSort());
