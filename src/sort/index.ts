@@ -6,6 +6,7 @@ import { InsertionSort } from './InsertionSort';
 import { MergeSort } from './MergeSort';
 import { QuickSort } from './QuickSort';
 import { ShellSort } from './ShellSort';
+import { CountingSort } from './CountingSort';
 
 export {
   Sort,
@@ -16,4 +17,5 @@ export {
   MergeSort,
   QuickSort,
   ShellSort,
+  CountingSort,
 };

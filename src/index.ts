@@ -1,5 +1,5 @@
 import { Integers, Times, Asserts } from './tools'
-import { Sort, BubbleSort, SelectionSort, HeapSort, InsertionSort, MergeSort, QuickSort, ShellSort } from './sort';
+import { Sort, BubbleSort, SelectionSort, HeapSort, InsertionSort, MergeSort, QuickSort, ShellSort, CountingSort } from './sort';
 
 const testSorts = (array: number[], ...sorts: Sort[]) => {
   sorts.forEach((sort: Sort) => {
@@ -14,8 +14,9 @@ const testSorts = (array: number[], ...sorts: Sort[]) => {
 }
 
 
-const array: number[] = Integers.random(10000, 0, 20000);
-// console.log('origin array: ', array);
+const array: number[] = Integers.random(10, 0, 20);
+console.log('origin array: ', array);
+
 testSorts(
   array,
   new BubbleSort(),
@@ -25,4 +26,5 @@ testSorts(
   new MergeSort(),
   new QuickSort(),
   new ShellSort(),
+  new CountingSort(),
 );

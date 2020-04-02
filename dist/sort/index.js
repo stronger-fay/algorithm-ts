@@ -16,3 +16,5 @@ const QuickSort_1 = require("./QuickSort");
 exports.QuickSort = QuickSort_1.QuickSort;
 const ShellSort_1 = require("./ShellSort");
 exports.ShellSort = ShellSort_1.ShellSort;
+const CountingSort_1 = require("./CountingSort");
+exports.CountingSort = CountingSort_1.CountingSort;
