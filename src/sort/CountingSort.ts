@@ -54,8 +54,6 @@ export class CountingSort extends Sort {
         this.array[index++] = i;
       }
     }
-    console.log('this.array: ', this.array);
-
   }
 }
 

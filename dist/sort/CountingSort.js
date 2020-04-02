@@ -48,7 +48,6 @@ class CountingSort extends Sort_1.Sort {
                 this.array[index++] = i;
             }
         }
-        console.log('this.array: ', this.array);
     }
 }
 exports.CountingSort = CountingSort;

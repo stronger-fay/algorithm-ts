@@ -1,20 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Sort_1 = require("./Sort");
-exports.Sort = Sort_1.Sort;
+const tools_1 = require("../tools");
 const BubbleSort_1 = require("./BubbleSort");
-exports.BubbleSort = BubbleSort_1.BubbleSort;
 const SelectionSort_1 = require("./SelectionSort");
-exports.SelectionSort = SelectionSort_1.SelectionSort;
 const HeapSort_1 = require("./HeapSort");
-exports.HeapSort = HeapSort_1.HeapSort;
 const InsertionSort_1 = require("./InsertionSort");
-exports.InsertionSort = InsertionSort_1.InsertionSort;
 const MergeSort_1 = require("./MergeSort");
-exports.MergeSort = MergeSort_1.MergeSort;
 const QuickSort_1 = require("./QuickSort");
-exports.QuickSort = QuickSort_1.QuickSort;
 const ShellSort_1 = require("./ShellSort");
-exports.ShellSort = ShellSort_1.ShellSort;
 const CountingSort_1 = require("./CountingSort");
-exports.CountingSort = CountingSort_1.CountingSort;
+const testSorts = (array, ...sorts) => {
+    sorts.forEach((sort) => {
+        const newArray = [...array];
+        sort.sort(newArray);
+        tools_1.Asserts.test(tools_1.Integers.isAscOrder(newArray));
+    });
+    sorts.forEach((sort) => {
+        console.log(sort.toString());
+    });
+};
+const array = tools_1.Integers.random(10000, 0, 20000);
+// console.log('origin array: ', array);
+testSorts(array, new BubbleSort_1.BubbleSort(), new SelectionSort_1.SelectionSort(), new HeapSort_1.HeapSort(), new InsertionSort_1.InsertionSort(), new MergeSort_1.MergeSort(), new QuickSort_1.QuickSort(), new ShellSort_1.ShellSort(), new CountingSort_1.CountingSort());
