@@ -14,3 +14,5 @@ const MergeSort_1 = require("./MergeSort");
 exports.MergeSort = MergeSort_1.MergeSort;
 const QuickSort_1 = require("./QuickSort");
 exports.QuickSort = QuickSort_1.QuickSort;
+const ShellSort_1 = require("./ShellSort");
+exports.ShellSort = ShellSort_1.ShellSort;

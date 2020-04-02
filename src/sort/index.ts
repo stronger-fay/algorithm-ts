@@ -5,6 +5,7 @@ import { HeapSort } from './HeapSort';
 import { InsertionSort } from './InsertionSort';
 import { MergeSort } from './MergeSort';
 import { QuickSort } from './QuickSort';
+import { ShellSort } from './ShellSort';
 
 export {
   Sort,
@@ -14,4 +15,5 @@ export {
   InsertionSort,
   MergeSort,
   QuickSort,
+  ShellSort,
 };
