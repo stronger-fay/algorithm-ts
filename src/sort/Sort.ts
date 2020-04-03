@@ -14,7 +14,7 @@ export abstract class Sort {
     this.time = 0;
   }
 
-  sort(array: number[]) {
+  sort(array: number[]): void {
     if (!array || array === null || array.length < 2) return;
 
     this.array = array;
@@ -49,7 +49,7 @@ export abstract class Sort {
   /**
    * 交换元素
    */
-  swap(index1: number, index2: number) {
+  swap(index1: number, index2: number): void {
     this.swapCount++;
 
     let tmp = this.array[index1];
@@ -60,7 +60,7 @@ export abstract class Sort {
   /**
    * 转换单位
    */
-  numberString(number: number) {
+  numberString(number: number): string {
     if (number < 10000) return "" + number;
 
     if (number < 100000000) return (number / 10000.0) + "万";
