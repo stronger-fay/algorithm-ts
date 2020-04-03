@@ -193,23 +193,55 @@ export class ListGraph<V, E> implements Graph<V, E> {
     * @param v 
     */
   dfs(begin: V): void {
-    const vertex = this.vertices.get(begin);
+    let vertex = this.vertices.get(begin);
     if (!vertex) return;
 
     // 访问过的顶点集合
     const visitedSet = new Set<Vertex<V, E>>();
-    this.dfsTravel(vertex, visitedSet)
-  }
 
+    // 1. 非递归实现
+    console.log('dfs 非递归:');
+    this.dfsNormal(vertex, visitedSet);
+
+
+    // 2. 递归实现
+    console.log('\ndfs 递归:');
+    visitedSet.clear();
+    this.dfsRecursion(vertex, visitedSet)
+  }
+  private dfsNormal(vertex: Vertex<V, E> | undefined, visitedSet: Set<Vertex<V, E>>) {
+    if (!vertex) return;
+    // 1. 非递归实现
+    const stack: Vertex<V, E>[] = [];
+
+    stack.push(vertex);
+    visitedSet.add(vertex);
+    console.log('vertex: ', vertex.toString());
+
+    while (stack.length !== 0) {
+      vertex = stack.pop();
+      if (!vertex) continue;
+
+      for (const edge of vertex.outEdges) {
+        if (visitedSet.has(edge.to)) continue;
+
+        stack.push(edge.from);
+        stack.push(edge.to);
+        visitedSet.add(edge.to);
+        console.log('vertex: ', edge.to.toString());
+        break;
+      }
+    }
+  }
   /**
    * 深度优先遍历递归执行函数
    */
-  private dfsTravel(vertex: Vertex<V, E>, visitedSet: Set<Vertex<V, E>>) {
+  private dfsRecursion(vertex: Vertex<V, E>, visitedSet: Set<Vertex<V, E>>) {
     console.log('vertex: ', vertex.toString());
     visitedSet.add(vertex);
     for (const edge of vertex.outEdges) {
       if (!visitedSet.has(edge.to)) {
-        this.dfsTravel(edge.to, visitedSet);
+        this.dfsRecursion(edge.to, visitedSet);
       }
     }
   }

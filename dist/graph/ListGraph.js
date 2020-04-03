@@ -184,22 +184,51 @@ class ListGraph {
       * @param v
       */
     dfs(begin) {
-        const vertex = this.vertices.get(begin);
+        let vertex = this.vertices.get(begin);
         if (!vertex)
             return;
         // 访问过的顶点集合
         const visitedSet = new Set();
-        this.dfsTravel(vertex, visitedSet);
+        // 1. 非递归实现
+        console.log('dfs 非递归:');
+        this.dfsNormal(vertex, visitedSet);
+        // 2. 递归实现
+        console.log('\ndfs 递归:');
+        visitedSet.clear();
+        this.dfsRecursion(vertex, visitedSet);
+    }
+    dfsNormal(vertex, visitedSet) {
+        if (!vertex)
+            return;
+        // 1. 非递归实现
+        const stack = [];
+        stack.push(vertex);
+        visitedSet.add(vertex);
+        console.log('vertex: ', vertex.toString());
+        while (stack.length !== 0) {
+            vertex = stack.pop();
+            if (!vertex)
+                continue;
+            for (const edge of vertex.outEdges) {
+                if (visitedSet.has(edge.to))
+                    continue;
+                stack.push(edge.from);
+                stack.push(edge.to);
+                visitedSet.add(edge.to);
+                console.log('vertex: ', edge.to.toString());
+                break;
+            }
+        }
     }
     /**
      * 深度优先遍历递归执行函数
      */
-    dfsTravel(vertex, visitedSet) {
+    dfsRecursion(vertex, visitedSet) {
         console.log('vertex: ', vertex.toString());
         visitedSet.add(vertex);
         for (const edge of vertex.outEdges) {
             if (!visitedSet.has(edge.to)) {
-                this.dfsTravel(edge.to, visitedSet);
+                this.dfsRecursion(edge.to, visitedSet);
             }
         }
     }
