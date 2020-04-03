@@ -151,6 +151,41 @@ export class ListGraph<V, E> implements Graph<V, E> {
       this.edges.delete(oldEdge);
     }
   }
+
+  /**
+   * 广度优先遍历
+   * @param v 
+   */
+  bfs(begin: V): void {
+    const beginVertex = this.vertices.get(begin);
+    if (!beginVertex) return;
+
+    // 遍历过的顶点集合
+    const visitedSet = new Set<Vertex<V, E>>();
+    // 通过队列来实现 广度优先搜索
+    const queue: Vertex<V, E>[] = [];
+    // 起点入队
+    queue.push(beginVertex);
+    // 记录遍历过的对象
+    visitedSet.add(beginVertex);
+
+    while (queue.length !== 0) {
+      let vertex = queue.pop();
+      if (!vertex) break;
+
+      console.log('vertex: ', vertex.toString());
+
+
+      // 将能直接到达的下一个顶点集合，加入到队列当中，需过滤掉访问过的顶点
+      vertex.outEdges.forEach(element => {
+        if (!visitedSet.has(element.to)) {
+          queue.push(element.to);
+          // 记录遍历过的对象
+          visitedSet.add(element.to);
+        };
+      });
+    }
+  }
 }
 
 /**
