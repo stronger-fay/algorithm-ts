@@ -179,6 +179,30 @@ class ListGraph {
             });
         }
     }
+    /**
+      * 深度优先遍历
+      * @param v
+      */
+    dfs(begin) {
+        const vertex = this.vertices.get(begin);
+        if (!vertex)
+            return;
+        // 访问过的顶点集合
+        const visitedSet = new Set();
+        this.dfsTravel(vertex, visitedSet);
+    }
+    /**
+     * 深度优先遍历递归执行函数
+     */
+    dfsTravel(vertex, visitedSet) {
+        console.log('vertex: ', vertex.toString());
+        visitedSet.add(vertex);
+        for (const edge of vertex.outEdges) {
+            if (!visitedSet.has(edge.to)) {
+                this.dfsTravel(edge.to, visitedSet);
+            }
+        }
+    }
 }
 exports.ListGraph = ListGraph;
 /**

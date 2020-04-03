@@ -186,6 +186,33 @@ export class ListGraph<V, E> implements Graph<V, E> {
       });
     }
   }
+
+
+  /**
+    * 深度优先遍历
+    * @param v 
+    */
+  dfs(begin: V): void {
+    const vertex = this.vertices.get(begin);
+    if (!vertex) return;
+
+    // 访问过的顶点集合
+    const visitedSet = new Set<Vertex<V, E>>();
+    this.dfsTravel(vertex, visitedSet)
+  }
+
+  /**
+   * 深度优先遍历递归执行函数
+   */
+  private dfsTravel(vertex: Vertex<V, E>, visitedSet: Set<Vertex<V, E>>) {
+    console.log('vertex: ', vertex.toString());
+    visitedSet.add(vertex);
+    for (const edge of vertex.outEdges) {
+      if (!visitedSet.has(edge.to)) {
+        this.dfsTravel(edge.to, visitedSet);
+      }
+    }
+  }
 }
 
 /**

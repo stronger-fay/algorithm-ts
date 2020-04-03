@@ -12,4 +12,5 @@ export interface Graph<V, E> {
   removeEdge(from: V, to: V): void;
 
   bfs(begin: V): void;
+  dfs(begin: V): void;
 }
