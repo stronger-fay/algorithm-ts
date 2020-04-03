@@ -151,7 +151,9 @@ class ListGraph {
      * 广度优先遍历
      * @param v
      */
-    bfs(begin) {
+    bfs(begin, visitor) {
+        if (!visitor)
+            return;
         const beginVertex = this.vertices.get(begin);
         if (!beginVertex)
             return;
@@ -165,9 +167,10 @@ class ListGraph {
         visitedSet.add(beginVertex);
         while (queue.length !== 0) {
             let vertex = queue.pop();
-            if (!vertex)
+            if (vertex === undefined)
                 break;
-            console.log('vertex: ', vertex.toString());
+            if (visitor.visit(vertex.value))
+                return;
             // 将能直接到达的下一个顶点集合，加入到队列当中，需过滤掉访问过的顶点
             vertex.outEdges.forEach(element => {
                 if (!visitedSet.has(element.to)) {
@@ -183,28 +186,34 @@ class ListGraph {
       * 深度优先遍历
       * @param v
       */
-    dfs(begin) {
+    dfs(begin, visitor) {
+        if (!visitor)
+            return;
         let vertex = this.vertices.get(begin);
         if (!vertex)
             return;
         // 访问过的顶点集合
         const visitedSet = new Set();
         // 1. 非递归实现
-        console.log('dfs 非递归:');
-        this.dfsNormal(vertex, visitedSet);
+        // console.log('dfs 非递归:');
+        // this.dfsNormal(vertex, visitedSet, visitor);
         // 2. 递归实现
         console.log('\ndfs 递归:');
         visitedSet.clear();
-        this.dfsRecursion(vertex, visitedSet);
+        this.dfsRecursion(vertex, visitedSet, visitor);
     }
-    dfsNormal(vertex, visitedSet) {
+    /**
+     * 深度优先遍历非递归实现
+     */
+    dfsNormal(vertex, visitedSet, visitor) {
         if (!vertex)
             return;
         // 1. 非递归实现
         const stack = [];
         stack.push(vertex);
         visitedSet.add(vertex);
-        console.log('vertex: ', vertex.toString());
+        if (visitor.visit(vertex.value))
+            return;
         while (stack.length !== 0) {
             vertex = stack.pop();
             if (!vertex)
@@ -215,7 +224,8 @@ class ListGraph {
                 stack.push(edge.from);
                 stack.push(edge.to);
                 visitedSet.add(edge.to);
-                console.log('vertex: ', edge.to.toString());
+                if (visitor.visit(edge.to.value))
+                    return;
                 break;
             }
         }
@@ -223,12 +233,13 @@ class ListGraph {
     /**
      * 深度优先遍历递归执行函数
      */
-    dfsRecursion(vertex, visitedSet) {
-        console.log('vertex: ', vertex.toString());
+    dfsRecursion(vertex, visitedSet, visitor) {
+        if (visitor.visit(vertex.value))
+            return;
         visitedSet.add(vertex);
         for (const edge of vertex.outEdges) {
             if (!visitedSet.has(edge.to)) {
-                this.dfsRecursion(edge.to, visitedSet);
+                this.dfsRecursion(edge.to, visitedSet, visitor);
             }
         }
     }

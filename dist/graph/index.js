@@ -29,7 +29,15 @@ graph.addEdge('V2', 'V0', 2);
 graph.addEdge('V2', 'V3', 5);
 graph.addEdge('V3', 'V4', 1);
 graph.addEdge('V0', 'V4', 6);
-console.log('bfs: ');
-graph.bfs('V1'); // 12340
-console.log('dfs: ');
-graph.dfs('V1'); // 10423
+graph.bfs('V1', {
+    visit: (v) => {
+        console.log('bfs: ', v);
+        return v === 'V2';
+    }
+});
+graph.dfs('V1', {
+    visit: (v) => {
+        console.log('dfs: ', v);
+        return v === 'V4';
+    }
+});

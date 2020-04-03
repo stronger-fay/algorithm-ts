@@ -11,6 +11,10 @@ export interface Graph<V, E> {
   removeVertex(v: V): void;
   removeEdge(from: V, to: V): void;
 
-  bfs(begin: V): void;
-  dfs(begin: V): void;
+  bfs(begin: V, visitor: VertexVisitor): void;
+  dfs(begin: V, visitor: VertexVisitor): void;
+}
+
+export interface VertexVisitor<V> {
+  visit(v: V): boolean;
 }
