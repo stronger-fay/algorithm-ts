@@ -3,9 +3,18 @@ import { Graph, WeightManager } from './Graph';
 import { Data } from './Data';
 
 
-testBfs();
-testDfs();
+// testBfs();
+// testDfs();
+testTopo();
+/**
+ * 拓扑排序
+ */
 
+function testTopo(): void {
+  const graph: Graph<any, number> = directedGraph(Data.TOPO);
+  const list: any[] = graph.topologicalSort();
+  console.log(list);
+}
 
 /**
  * 测试深度优先搜索

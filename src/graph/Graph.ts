@@ -13,6 +13,7 @@ export interface Graph<V, E> {
 
   bfs(begin: V, visitor: VertexVisitor): void;
   dfs(begin: V, visitor: VertexVisitor): void;
+  topologicalSort(): V[];
 }
 
 export interface VertexVisitor<V> {

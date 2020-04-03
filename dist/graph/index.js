@@ -2,8 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ListGraph_1 = require("./ListGraph");
 const Data_1 = require("./Data");
-testBfs();
-testDfs();
+// testBfs();
+// testDfs();
+testTopo();
+/**
+ * 拓扑排序
+ */
+function testTopo() {
+    const graph = directedGraph(Data_1.Data.TOPO);
+    const list = graph.topologicalSort();
+    console.log(list);
+}
 /**
  * 测试深度优先搜索
  */

@@ -243,6 +243,46 @@ class ListGraph {
             }
         }
     }
+    /**
+     * 拓扑排序
+     */
+    topologicalSort() {
+        const list = new Array();
+        // 入度为0的操作队列，当顶点的入度为0，添加到该队列当中
+        const queue = new Array();
+        // 存储所有节点的入度信息
+        const ins = new Map();
+        // 存储所有的顶点的入度数量，并将度为0的节点放进queue
+        this.vertices.forEach((vertex) => {
+            if (vertex.inEdges.size === 0) {
+                queue.push(vertex);
+            }
+            else {
+                ins.set(vertex, vertex.inEdges.size);
+            }
+        });
+        // 操作queue中的顶点
+        while (queue.length !== 0) {
+            const vertex = queue.pop();
+            if (!vertex)
+                continue;
+            // 入度为0的，放进list
+            list.push(vertex.value);
+            // 遍历该节点的出度，并将所有边的 to的入度数量减一，假如to的入度为0，则加入到queue
+            vertex.outEdges.forEach((edge) => {
+                if (edge) {
+                    let value = (ins.get(edge.to) || 0) - 1;
+                    if (value === 0) {
+                        queue.push(edge.to);
+                    }
+                    else {
+                        ins.set(edge.to, value);
+                    }
+                }
+            });
+        }
+        return list;
+    }
 }
 exports.ListGraph = ListGraph;
 /**

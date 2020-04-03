@@ -252,6 +252,50 @@ export class ListGraph<V, E> implements Graph<V, E> {
       }
     }
   }
+
+  /**
+   * 拓扑排序
+   */
+  topologicalSort(): V[] {
+    const list = new Array<V>();
+
+    // 入度为0的操作队列，当顶点的入度为0，添加到该队列当中
+    const queue = new Array<Vertex<V, E>>();
+    // 存储所有节点的入度信息
+    const ins = new Map<Vertex<V, E>, number>();
+
+    // 存储所有的顶点的入度数量，并将度为0的节点放进queue
+    this.vertices.forEach((vertex: Vertex<V, E>) => {
+      if (vertex.inEdges.size === 0) {
+        queue.push(vertex);
+      } else {
+        ins.set(vertex, vertex.inEdges.size);
+      }
+    });
+
+    // 操作queue中的顶点
+    while (queue.length !== 0) {
+      const vertex = queue.pop();
+      if (!vertex) continue;
+
+      // 入度为0的，放进list
+      list.push(vertex.value);
+
+      // 遍历该节点的出度，并将所有边的 to的入度数量减一，假如to的入度为0，则加入到queue
+      vertex.outEdges.forEach((edge: Edge<V, E>) => {
+        if (edge) {
+          let value: number = (ins.get(edge.to) || 0) - 1;
+          if (value === 0) {
+            queue.push(edge.to);
+          } else {
+            ins.set(edge.to, value);
+          }
+        }
+      })
+    }
+    return list;
+  }
+
 }
 
 /**
