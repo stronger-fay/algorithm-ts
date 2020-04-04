@@ -8,10 +8,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const _ = __importStar(require("lodash"));
-class ListGraph {
-    constructor() {
+const Graph_1 = require("./Graph");
+const base_1 = require("../base");
+class ListGraph extends Graph_1.Graph {
+    constructor(weightManager) {
+        super(weightManager);
         this.vertices = new Map(); // 存放所有的顶点
         this.edges = new Set(); // 存放所有顶点的所有边
+        this.edgeComparator = new base_1.Comparator((e1, e2) => {
+            return this.weightManager.compare(e1.weight, e2.weight) || 0; // 比较失败，则返回0
+        });
     }
     /**
      * 查看输出
@@ -194,13 +200,17 @@ class ListGraph {
             return;
         // 访问过的顶点集合
         const visitedSet = new Set();
-        // 1. 非递归实现
-        // console.log('dfs 非递归:');
-        // this.dfsNormal(vertex, visitedSet, visitor);
-        // 2. 递归实现
-        console.log('\ndfs 递归:');
-        visitedSet.clear();
-        this.dfsRecursion(vertex, visitedSet, visitor);
+        if (Math.random() > 0.5) {
+            // 1. 非递归实现
+            console.log('dfs 非递归:');
+            this.dfsNormal(vertex, visitedSet, visitor);
+        }
+        else {
+            // 2. 递归实现
+            console.log('\ndfs 递归:');
+            visitedSet.clear();
+            this.dfsRecursion(vertex, visitedSet, visitor);
+        }
     }
     /**
      * 深度优先遍历非递归实现
@@ -283,6 +293,36 @@ class ListGraph {
         }
         return list;
     }
+    /**
+     *  最小生成树，prim、krushal
+     */
+    mst() {
+        return Math.random() > 0.5 ? this.prim() : this.kruskal();
+    }
+    prim() {
+        const edgeInfos = new Set();
+        const it = this.vertices.values()[Symbol.iterator]();
+        let vertex = it.next().value;
+        if (vertex === undefined)
+            return edgeInfos;
+        const addedVertices = new Set();
+        addedVertices.add(vertex);
+        const heap = new base_1.MinHeap(vertex.outEdges, this.edgeComparator);
+        const verticesSize = this.vertices.size;
+        while (!heap.isEmpty() && addedVertices.size < verticesSize) {
+            const edge = heap.remove();
+            if (addedVertices.has(edge.to))
+                continue;
+            edgeInfos.add(edge.info());
+            addedVertices.add(edge.to);
+            heap.addAll(edge.to.outEdges);
+        }
+        return edgeInfos;
+    }
+    kruskal() {
+        const set = new Set();
+        return set;
+    }
 }
 exports.ListGraph = ListGraph;
 /**
@@ -309,6 +349,9 @@ class Edge {
         this.from = from;
         this.to = to;
         this.weight = weight;
+    }
+    info() {
+        return new Graph_1.EdgeInfo(this.from.value, this.to.value, this.weight);
     }
     equals(edge) {
         // 判断连个节点是否相等

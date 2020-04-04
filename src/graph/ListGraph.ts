@@ -1,10 +1,19 @@
 import * as _ from 'lodash'
-import { Graph, VertexVisitor } from './Graph';
+import { Graph, VertexVisitor, EdgeInfo, WeightManager } from './Graph';
+import { MinHeap, Comparator, Comparable } from '../base';
 
-export class ListGraph<V, E> implements Graph<V, E> {
+export class ListGraph<V, E> extends Graph<V, E> {
   private vertices: Map<V, Vertex<V, E>> = new Map(); // 存放所有的顶点
   private edges: Set<Edge<V, E>> = new Set(); // 存放所有顶点的所有边
+  private edgeComparator: Comparator<Edge<V, E>> = new Comparator(
+    (e1: Edge<V, E>, e2: Edge<V, E>) => {
+      return this.weightManager.compare(e1.weight, e2.weight) || 0; // 比较失败，则返回0
+    }
+  );
 
+  constructor(weightManager: WeightManager<E>) {
+    super(weightManager);
+  }
   /**
    * 查看输出
    */
@@ -297,6 +306,37 @@ export class ListGraph<V, E> implements Graph<V, E> {
     return list;
   }
 
+  /**
+   *  最小生成树，prim、krushal
+   */
+  mst(): Set<EdgeInfo<V, E>> {
+    return Math.random() > 0.5 ? this.prim() : this.kruskal();
+  }
+  prim(): Set<EdgeInfo<V, E>> {
+    const edgeInfos = new Set<EdgeInfo<V, E>>();
+
+    const it = this.vertices.values()[Symbol.iterator]();
+    let vertex: Vertex<V, E> = it.next().value;
+
+    if (vertex === undefined) return edgeInfos;
+    const addedVertices = new Set<Vertex<V, E>>();
+    addedVertices.add(vertex);
+
+    const heap: MinHeap<Edge<V, E>> = new MinHeap(vertex.outEdges, this.edgeComparator);
+    const verticesSize = this.vertices.size;
+    while (!heap.isEmpty() && addedVertices.size < verticesSize) {
+      const edge: Edge<V, E> = heap.remove();
+      if (addedVertices.has(edge.to)) continue;
+      edgeInfos.add(edge.info());
+      addedVertices.add(edge.to);
+      heap.addAll(edge.to.outEdges);
+    }
+    return edgeInfos;
+  }
+  kruskal(): Set<EdgeInfo<V, E>> {
+    const set = new Set<EdgeInfo<V, E>>();
+    return set;
+  }
 }
 
 /**
@@ -325,7 +365,7 @@ class Vertex<V, E> {
 /**
  * 边类
  */
-class Edge<V, E> {
+class Edge<V, E> implements Comparable<E> {
   from: Vertex<V, E>;
   to: Vertex<V, E>;
   weight?: E;
@@ -334,6 +374,10 @@ class Edge<V, E> {
     this.from = from;
     this.to = to;
     this.weight = weight;
+  }
+
+  public info(): EdgeInfo<V, E> {
+    return new EdgeInfo(this.from.value, this.to.value, this.weight);
   }
 
   public equals(edge: Edge<V, E>) {

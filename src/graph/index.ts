@@ -1,11 +1,34 @@
 import { ListGraph } from './ListGraph';
-import { Graph, WeightManager } from './Graph';
+import { Graph, WeightManager, EdgeInfo } from './Graph';
 import { Data } from './Data';
+
+/**
+ * 权重管理器
+ */
+const weightManager: WeightManager<number> = {
+  compare(w1: number, w2: number): number {
+    return w1 + w2;
+  },
+  add(w1: number, w2: number): number {
+    return w1 + w2;
+  },
+  zero(): number {
+    return 0.0;
+  }
+};
 
 
 // testBfs();
 // testDfs();
-testTopo();
+// testTopo();
+testMst();
+
+function testMst(): void {
+  const graph: Graph<any, number> = directedGraph(Data.MST_01);
+  const list: Set<EdgeInfo<any, number>> = graph.mst();
+  console.log('MST: ', list);
+}
+
 /**
  * 拓扑排序
  */
@@ -98,25 +121,10 @@ function test() {
 
 
 /**
- * 权重管理器
- */
-const weightManager: WeightManager<number> = {
-  compare(w1: number, w2: number): number {
-    return w1 + w2;
-  },
-  add(w1: number, w2: number): number {
-    return w1 + w2;
-  },
-  zero(): number {
-    return 0.0;
-  }
-};
-
-/**
  * 有向图
  */
 function directedGraph(data: any[][]): Graph<any, number> {
-  const graph: Graph<any, number> = new ListGraph();
+  const graph: Graph<any, number> = new ListGraph(weightManager);
 
   for (const edge of data) {
     if (edge.length == 1) {
@@ -137,7 +145,7 @@ function directedGraph(data: any[][]): Graph<any, number> {
  * @return
  */
 function undirectedGraph(data: any[][]): Graph<any, number> {
-  const graph: Graph<any, number> = new ListGraph();
+  const graph: Graph<any, number> = new ListGraph(weightManager);
   for (const edge of data) {
     if (edge.length == 1) {
       graph.addVertex(edge[0]);

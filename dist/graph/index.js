@@ -2,9 +2,29 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ListGraph_1 = require("./ListGraph");
 const Data_1 = require("./Data");
+/**
+ * 权重管理器
+ */
+const weightManager = {
+    compare(w1, w2) {
+        return w1 + w2;
+    },
+    add(w1, w2) {
+        return w1 + w2;
+    },
+    zero() {
+        return 0.0;
+    }
+};
 // testBfs();
 // testDfs();
-testTopo();
+// testTopo();
+testMst();
+function testMst() {
+    const graph = directedGraph(Data_1.Data.MST_01);
+    const list = graph.mst();
+    console.log('MST: ', list);
+}
 /**
  * 拓扑排序
  */
@@ -83,24 +103,10 @@ function test() {
     });
 }
 /**
- * 权重管理器
- */
-const weightManager = {
-    compare(w1, w2) {
-        return w1 + w2;
-    },
-    add(w1, w2) {
-        return w1 + w2;
-    },
-    zero() {
-        return 0.0;
-    }
-};
-/**
  * 有向图
  */
 function directedGraph(data) {
-    const graph = new ListGraph_1.ListGraph();
+    const graph = new ListGraph_1.ListGraph(weightManager);
     for (const edge of data) {
         if (edge.length == 1) {
             graph.addVertex(edge[0]);
@@ -121,7 +127,7 @@ function directedGraph(data) {
  * @return
  */
 function undirectedGraph(data) {
-    const graph = new ListGraph_1.ListGraph();
+    const graph = new ListGraph_1.ListGraph(weightManager);
     for (const edge of data) {
         if (edge.length == 1) {
             graph.addVertex(edge[0]);
