@@ -16,6 +16,7 @@ class ListGraph extends Graph_1.Graph {
         this.vertices = new Map(); // 存放所有的顶点
         this.edges = new Set(); // 存放所有顶点的所有边
         this.edgeComparator = new base_1.Comparator((e1, e2) => {
+            // console.log(`\ne1(${e1}) ? e2(${e2}) = ${this.weightManager.compare(e1.weight, e2.weight) || 0}`)
             return this.weightManager.compare(e1.weight, e2.weight) || 0; // 比较失败，则返回0
         });
     }
@@ -297,25 +298,30 @@ class ListGraph extends Graph_1.Graph {
      *  最小生成树，prim、krushal
      */
     mst() {
-        return Math.random() > 0.5 ? this.prim() : this.kruskal();
+        return this.prim();
+        // return Math.random() > 0.5 ? this.prim() : this.kruskal();
     }
     prim() {
         const edgeInfos = new Set();
+        // 遍历所有的顶点
         const it = this.vertices.values()[Symbol.iterator]();
         let vertex = it.next().value;
         if (vertex === undefined)
             return edgeInfos;
+        // 存储已经遍历过的顶点
         const addedVertices = new Set();
+        // 记录第一个顶点
         addedVertices.add(vertex);
+        // 初始化最小堆，用于记录当前顶点，所有的出度，取出最小的出度
         const heap = new base_1.MinHeap(vertex.outEdges, this.edgeComparator);
-        const verticesSize = this.vertices.size;
-        while (!heap.isEmpty() && addedVertices.size < verticesSize) {
-            const edge = heap.remove();
+        const verticesSize = this.vertices.size; // 顶点数量
+        while (!heap.isEmpty() && addedVertices.size < verticesSize) { // 堆还有数据，并且没有遍历完所有的顶点
+            const edge = heap.remove(); // 拿到最小权重的边 edge
             if (addedVertices.has(edge.to))
-                continue;
+                continue; // 过滤已经添加的顶点
             edgeInfos.add(edge.info());
             addedVertices.add(edge.to);
-            heap.addAll(edge.to.outEdges);
+            heap.addAll(edge.to.outEdges); // 并最短路径的目标顶点 to 的所有出度 outEdges，加入到最小堆，保证下次从堆中 remove 出来的是最小权重的edge
         }
         return edgeInfos;
     }

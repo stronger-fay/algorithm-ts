@@ -7,6 +7,7 @@ export class ListGraph<V, E> extends Graph<V, E> {
   private edges: Set<Edge<V, E>> = new Set(); // 存放所有顶点的所有边
   private edgeComparator: Comparator<Edge<V, E>> = new Comparator(
     (e1: Edge<V, E>, e2: Edge<V, E>) => {
+      // console.log(`\ne1(${e1}) ? e2(${e2}) = ${this.weightManager.compare(e1.weight, e2.weight) || 0}`)
       return this.weightManager.compare(e1.weight, e2.weight) || 0; // 比较失败，则返回0
     }
   );
@@ -224,7 +225,7 @@ export class ListGraph<V, E> extends Graph<V, E> {
   /**
    * 深度优先遍历非递归实现
    */
-  private dfsNormal(vertex: Vertex<V, E> | undefined, visitedSet: Set<Vertex<V, E>>, visitor: VertexVisitor) {
+  private dfsNormal(vertex: Vertex<V, E> | undefined, visitedSet: Set<Vertex<V, E>>, visitor: VertexVisitor<V>) {
     if (!vertex) return;
     // 1. 非递归实现
     const stack: Vertex<V, E>[] = [];
@@ -252,7 +253,7 @@ export class ListGraph<V, E> extends Graph<V, E> {
   /**
    * 深度优先遍历递归执行函数
    */
-  private dfsRecursion(vertex: Vertex<V, E>, visitedSet: Set<Vertex<V, E>>, visitor: VertexVisitor) {
+  private dfsRecursion(vertex: Vertex<V, E>, visitedSet: Set<Vertex<V, E>>, visitor: VertexVisitor<V>) {
     if (visitor.visit(vertex.value)) return;
 
     visitedSet.add(vertex);
@@ -310,26 +311,32 @@ export class ListGraph<V, E> extends Graph<V, E> {
    *  最小生成树，prim、krushal
    */
   mst(): Set<EdgeInfo<V, E>> {
-    return Math.random() > 0.5 ? this.prim() : this.kruskal();
+    return this.prim();
+    // return Math.random() > 0.5 ? this.prim() : this.kruskal();
   }
   prim(): Set<EdgeInfo<V, E>> {
     const edgeInfos = new Set<EdgeInfo<V, E>>();
 
+    // 遍历所有的顶点
     const it = this.vertices.values()[Symbol.iterator]();
     let vertex: Vertex<V, E> = it.next().value;
-
     if (vertex === undefined) return edgeInfos;
+
+    // 存储已经遍历过的顶点
     const addedVertices = new Set<Vertex<V, E>>();
+    // 记录第一个顶点
     addedVertices.add(vertex);
 
+    // 初始化最小堆，用于记录当前顶点，所有的出度，取出最小的出度
     const heap: MinHeap<Edge<V, E>> = new MinHeap(vertex.outEdges, this.edgeComparator);
-    const verticesSize = this.vertices.size;
-    while (!heap.isEmpty() && addedVertices.size < verticesSize) {
-      const edge: Edge<V, E> = heap.remove();
-      if (addedVertices.has(edge.to)) continue;
+    const verticesSize = this.vertices.size; // 顶点数量
+
+    while (!heap.isEmpty() && addedVertices.size < verticesSize) { // 堆还有数据，并且没有遍历完所有的顶点
+      const edge: Edge<V, E> = heap.remove(); // 拿到最小权重的边 edge
+      if (addedVertices.has(edge.to)) continue; // 过滤已经添加的顶点
       edgeInfos.add(edge.info());
       addedVertices.add(edge.to);
-      heap.addAll(edge.to.outEdges);
+      heap.addAll(edge.to.outEdges); // 并最短路径的目标顶点 to 的所有出度 outEdges，加入到最小堆，保证下次从堆中 remove 出来的是最小权重的edge
     }
     return edgeInfos;
   }
@@ -365,7 +372,7 @@ class Vertex<V, E> {
 /**
  * 边类
  */
-class Edge<V, E> implements Comparable<E> {
+class Edge<V, E> {
   from: Vertex<V, E>;
   to: Vertex<V, E>;
   weight?: E;

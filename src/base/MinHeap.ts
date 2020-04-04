@@ -3,7 +3,7 @@ import { Comparator, Comparable } from './index';
 // todo: @wenqi
 export class MinHeap<E> { // E 应该具备可比较性， <E extends Comparable<E>> 暂时未实现，默认返回 0；但是必须提供comparator对象
   private size: number;
-  private comparator?: Comparator<E>;
+  private comparator: Comparator<E>;
   private compare(e1: E, e2: E): number {
     return this.comparator !== undefined
       ? this.comparator.compare(e1, e2)

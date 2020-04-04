@@ -7,7 +7,13 @@ const Data_1 = require("./Data");
  */
 const weightManager = {
     compare(w1, w2) {
-        return w1 + w2;
+        if (w1 > w2) {
+            return 1;
+        }
+        else if (w1 < w2) {
+            return -1;
+        }
+        return 0;
     },
     add(w1, w2) {
         return w1 + w2;
@@ -21,9 +27,9 @@ const weightManager = {
 // testTopo();
 testMst();
 function testMst() {
-    const graph = directedGraph(Data_1.Data.MST_01);
-    const list = graph.mst();
-    console.log('MST: ', list);
+    const graph = undirectedGraph(Data_1.Data.MST_01);
+    const infos = graph.mst();
+    console.log('mst: ', infos);
 }
 /**
  * 拓扑排序
@@ -62,7 +68,7 @@ function testBfs() {
  */
 function test() {
     // const graph = new ListGraph();
-    const graph = new ListGraph_1.ListGraph();
+    // const graph: Graph<string, number> = new ListGraph<string, number>();
     // 测试添加顶点
     // graph.addVertex('V10');
     // graph.print();
@@ -83,24 +89,24 @@ function test() {
     // graph.removeVertex('V1');
     // graph.print();
     // bfs dfs 测试
-    graph.addEdge('V1', 'V0', 9);
-    graph.addEdge('V1', 'V2', 3);
-    graph.addEdge('V2', 'V0', 2);
-    graph.addEdge('V2', 'V3', 5);
-    graph.addEdge('V3', 'V4', 1);
-    graph.addEdge('V0', 'V4', 6);
-    graph.bfs('V1', {
-        visit: (v) => {
-            console.log('bfs: ', v);
-            return v === 'V2';
-        }
-    });
-    graph.dfs('V1', {
-        visit: (v) => {
-            console.log('dfs: ', v);
-            return v === 'V4';
-        }
-    });
+    // graph.addEdge('V1', 'V0', 9);
+    // graph.addEdge('V1', 'V2', 3);
+    // graph.addEdge('V2', 'V0', 2);
+    // graph.addEdge('V2', 'V3', 5);
+    // graph.addEdge('V3', 'V4', 1);
+    // graph.addEdge('V0', 'V4', 6);
+    // graph.bfs('V1', {
+    //   visit: (v: any): boolean => {
+    //     console.log('bfs: ', v);
+    //     return v === 'V2';
+    //   }
+    // });
+    // graph.dfs('V1', {
+    //   visit: (v: any): boolean => {
+    //     console.log('dfs: ', v);
+    //     return v === 'V4';
+    //   }
+    // });
 }
 /**
  * 有向图

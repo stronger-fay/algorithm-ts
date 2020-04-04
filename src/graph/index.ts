@@ -7,7 +7,12 @@ import { Data } from './Data';
  */
 const weightManager: WeightManager<number> = {
   compare(w1: number, w2: number): number {
-    return w1 + w2;
+    if (w1 > w2) {
+      return 1;
+    } else if (w1 < w2) {
+      return -1;
+    }
+    return 0;
   },
   add(w1: number, w2: number): number {
     return w1 + w2;
@@ -24,9 +29,9 @@ const weightManager: WeightManager<number> = {
 testMst();
 
 function testMst(): void {
-  const graph: Graph<any, number> = directedGraph(Data.MST_01);
-  const list: Set<EdgeInfo<any, number>> = graph.mst();
-  console.log('MST: ', list);
+  const graph: Graph<any, number> = undirectedGraph(Data.MST_01);
+  const infos: Set<EdgeInfo<any, number>> = graph.mst();
+  console.log('mst: ', infos);
 }
 
 /**
@@ -70,7 +75,7 @@ function testBfs(): void {
  */
 function test() {
   // const graph = new ListGraph();
-  const graph: Graph<string, number> = new ListGraph<string, number>();
+  // const graph: Graph<string, number> = new ListGraph<string, number>();
 
   // 测试添加顶点
   // graph.addVertex('V10');
@@ -96,26 +101,26 @@ function test() {
   // graph.print();
 
   // bfs dfs 测试
-  graph.addEdge('V1', 'V0', 9);
-  graph.addEdge('V1', 'V2', 3);
-  graph.addEdge('V2', 'V0', 2);
-  graph.addEdge('V2', 'V3', 5);
-  graph.addEdge('V3', 'V4', 1);
-  graph.addEdge('V0', 'V4', 6);
+  // graph.addEdge('V1', 'V0', 9);
+  // graph.addEdge('V1', 'V2', 3);
+  // graph.addEdge('V2', 'V0', 2);
+  // graph.addEdge('V2', 'V3', 5);
+  // graph.addEdge('V3', 'V4', 1);
+  // graph.addEdge('V0', 'V4', 6);
 
-  graph.bfs('V1', {
-    visit: (v: any): boolean => {
-      console.log('bfs: ', v);
-      return v === 'V2';
-    }
-  });
+  // graph.bfs('V1', {
+  //   visit: (v: any): boolean => {
+  //     console.log('bfs: ', v);
+  //     return v === 'V2';
+  //   }
+  // });
 
-  graph.dfs('V1', {
-    visit: (v: any): boolean => {
-      console.log('dfs: ', v);
-      return v === 'V4';
-    }
-  });
+  // graph.dfs('V1', {
+  //   visit: (v: any): boolean => {
+  //     console.log('dfs: ', v);
+  //     return v === 'V4';
+  //   }
+  // });
 }
 
 
