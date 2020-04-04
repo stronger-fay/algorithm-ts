@@ -200,15 +200,16 @@ export class ListGraph<V, E> implements Graph<V, E> {
     // 访问过的顶点集合
     const visitedSet = new Set<Vertex<V, E>>();
 
-    // 1. 非递归实现
-    // console.log('dfs 非递归:');
-    // this.dfsNormal(vertex, visitedSet, visitor);
-
-
-    // 2. 递归实现
-    console.log('\ndfs 递归:');
-    visitedSet.clear();
-    this.dfsRecursion(vertex, visitedSet, visitor)
+    if (Math.random() > 0.5) {
+      // 1. 非递归实现
+      console.log('dfs 非递归:');
+      this.dfsNormal(vertex, visitedSet, visitor);
+    } else {
+      // 2. 递归实现
+      console.log('\ndfs 递归:');
+      visitedSet.clear();
+      this.dfsRecursion(vertex, visitedSet, visitor)
+    }
   }
 
   /**
