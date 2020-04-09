@@ -1,6 +1,9 @@
 import * as _ from 'lodash'
 import { Graph, VertexVisitor, EdgeInfo, WeightManager } from './Graph';
-import { MinHeap, Comparator, Comparable } from '../base';
+import { Comparator } from '../base';
+import { MinHeap } from '../base/heap/MinHeap';
+
+import { GenericUnionFind } from '../union/GenericUnionFind';
 
 export class ListGraph<V, E> extends Graph<V, E> {
   private vertices: Map<V, Vertex<V, E>> = new Map(); // 存放所有的顶点
@@ -311,10 +314,12 @@ export class ListGraph<V, E> extends Graph<V, E> {
    *  最小生成树，prim、krushal
    */
   mst(): Set<EdgeInfo<V, E>> {
-    return this.prim();
-    // return Math.random() > 0.5 ? this.prim() : this.kruskal();
+    // return this.prim();
+    // return this.kruskal();
+    return Math.random() > 0.5 ? this.prim() : this.kruskal();
   }
   prim(): Set<EdgeInfo<V, E>> {
+    console.log('prim: ');
     const edgeInfos = new Set<EdgeInfo<V, E>>();
 
     // 遍历所有的顶点
@@ -328,21 +333,44 @@ export class ListGraph<V, E> extends Graph<V, E> {
     addedVertices.add(vertex);
 
     // 初始化最小堆，用于记录当前顶点，所有的出度，取出最小的出度
-    const heap: MinHeap<Edge<V, E>> = new MinHeap(vertex.outEdges, this.edgeComparator);
+    const heap: MinHeap<Edge<V, E>> = new MinHeap([...vertex.outEdges], this.edgeComparator);
     const verticesSize = this.vertices.size; // 顶点数量
 
     while (!heap.isEmpty() && addedVertices.size < verticesSize) { // 堆还有数据，并且没有遍历完所有的顶点
       const edge: Edge<V, E> = heap.remove(); // 拿到最小权重的边 edge
       if (addedVertices.has(edge.to)) continue; // 过滤已经添加的顶点
+
       edgeInfos.add(edge.info());
       addedVertices.add(edge.to);
-      heap.addAll(edge.to.outEdges); // 并最短路径的目标顶点 to 的所有出度 outEdges，加入到最小堆，保证下次从堆中 remove 出来的是最小权重的edge
+      for (const nextEdge of edge.to.outEdges) {
+        if (!addedVertices.has(nextEdge.to)) {
+          heap.add(nextEdge);
+        }
+      }
+      // heap.addAll(edge.to.outEdges); // 并最短路径的目标顶点 to 的所有出度 outEdges，加入到最小堆，保证下次从堆中 remove 出来的是最小权重的edge
     }
     return edgeInfos;
   }
   kruskal(): Set<EdgeInfo<V, E>> {
-    const set = new Set<EdgeInfo<V, E>>();
-    return set;
+    console.log('kruskal: ');
+    const edgeInfos = new Set<EdgeInfo<V, E>>();
+
+    const edgeSize = this.vertices.size - 1;
+    if (edgeSize == -1) return edgeInfos;
+
+    const heap: MinHeap<Edge<V, E>> = new MinHeap([...this.edges], this.edgeComparator);
+    const uf: GenericUnionFind<Vertex<V, E>> = new GenericUnionFind();
+    this.vertices.forEach((vertex: Vertex<V, E>, v: V) => {
+      uf.makeSet(vertex);
+    });
+
+    while (!heap.isEmpty() && edgeInfos.size < edgeSize) {
+      const edge: Edge<V, E> = heap.remove();
+      if (uf.isSame(edge.from, edge.to)) continue;
+      edgeInfos.add(edge.info());
+      uf.union(edge.from, edge.to);
+    }
+    return edgeInfos;
   }
 }
 

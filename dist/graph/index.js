@@ -27,7 +27,7 @@ const weightManager = {
 // testTopo();
 testMst();
 function testMst() {
-    const graph = undirectedGraph(Data_1.Data.MST_01);
+    const graph = undirectedGraph(Data_1.Data.MST_02);
     const infos = graph.mst();
     console.log('mst: ', infos);
 }

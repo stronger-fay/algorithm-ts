@@ -10,6 +10,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _ = __importStar(require("lodash"));
 const Graph_1 = require("./Graph");
 const base_1 = require("../base");
+const MinHeap_1 = require("../base/heap/MinHeap");
+const GenericUnionFind_1 = require("../union/GenericUnionFind");
 class ListGraph extends Graph_1.Graph {
     constructor(weightManager) {
         super(weightManager);
@@ -298,10 +300,12 @@ class ListGraph extends Graph_1.Graph {
      *  最小生成树，prim、krushal
      */
     mst() {
-        return this.prim();
-        // return Math.random() > 0.5 ? this.prim() : this.kruskal();
+        // return this.prim();
+        // return this.kruskal();
+        return Math.random() > 0.5 ? this.prim() : this.kruskal();
     }
     prim() {
+        console.log('prim: ');
         const edgeInfos = new Set();
         // 遍历所有的顶点
         const it = this.vertices.values()[Symbol.iterator]();
@@ -313,7 +317,7 @@ class ListGraph extends Graph_1.Graph {
         // 记录第一个顶点
         addedVertices.add(vertex);
         // 初始化最小堆，用于记录当前顶点，所有的出度，取出最小的出度
-        const heap = new base_1.MinHeap(vertex.outEdges, this.edgeComparator);
+        const heap = new MinHeap_1.MinHeap([...vertex.outEdges], this.edgeComparator);
         const verticesSize = this.vertices.size; // 顶点数量
         while (!heap.isEmpty() && addedVertices.size < verticesSize) { // 堆还有数据，并且没有遍历完所有的顶点
             const edge = heap.remove(); // 拿到最小权重的边 edge
@@ -321,13 +325,34 @@ class ListGraph extends Graph_1.Graph {
                 continue; // 过滤已经添加的顶点
             edgeInfos.add(edge.info());
             addedVertices.add(edge.to);
-            heap.addAll(edge.to.outEdges); // 并最短路径的目标顶点 to 的所有出度 outEdges，加入到最小堆，保证下次从堆中 remove 出来的是最小权重的edge
+            for (const nextEdge of edge.to.outEdges) {
+                if (!addedVertices.has(nextEdge.to)) {
+                    heap.add(nextEdge);
+                }
+            }
+            // heap.addAll(edge.to.outEdges); // 并最短路径的目标顶点 to 的所有出度 outEdges，加入到最小堆，保证下次从堆中 remove 出来的是最小权重的edge
         }
         return edgeInfos;
     }
     kruskal() {
-        const set = new Set();
-        return set;
+        console.log('kruskal: ');
+        const edgeInfos = new Set();
+        const edgeSize = this.vertices.size - 1;
+        if (edgeSize == -1)
+            return edgeInfos;
+        const heap = new MinHeap_1.MinHeap([...this.edges], this.edgeComparator);
+        const uf = new GenericUnionFind_1.GenericUnionFind();
+        this.vertices.forEach((vertex, v) => {
+            uf.makeSet(vertex);
+        });
+        while (!heap.isEmpty() && edgeInfos.size < edgeSize) {
+            const edge = heap.remove();
+            if (uf.isSame(edge.from, edge.to))
+                continue;
+            edgeInfos.add(edge.info());
+            uf.union(edge.from, edge.to);
+        }
+        return edgeInfos;
     }
 }
 exports.ListGraph = ListGraph;

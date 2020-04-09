@@ -29,7 +29,7 @@ const weightManager: WeightManager<number> = {
 testMst();
 
 function testMst(): void {
-  const graph: Graph<any, number> = undirectedGraph(Data.MST_01);
+  const graph: Graph<any, number> = undirectedGraph(Data.MST_02);
   const infos: Set<EdgeInfo<any, number>> = graph.mst();
   console.log('mst: ', infos);
 }
