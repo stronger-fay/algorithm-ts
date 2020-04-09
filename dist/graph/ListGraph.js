@@ -348,7 +348,7 @@ class ListGraph extends Graph_1.Graph {
         while (!heap.isEmpty() && edgeInfos.size < edgeSize) {
             const edge = heap.remove();
             if (uf.isSame(edge.from, edge.to))
-                continue;
+                continue; // 并查集：如果已经有一个共同顶点的话，说明合并以后，会产生环，所以要过滤掉
             edgeInfos.add(edge.info());
             uf.union(edge.from, edge.to);
         }
