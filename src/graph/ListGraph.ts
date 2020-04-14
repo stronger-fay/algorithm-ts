@@ -382,11 +382,74 @@ export class ListGraph<V, E> extends Graph<V, E> {
    * @param begin 起点
    */
   public shortestPath(begin: V): Map<V, PathInfo<V, E>> {
-    return this.dijkstra(begin);
+    // return this.dijkstra(begin);
+    return this.bellmanFord(begin);
   }
 
-  private dijkstra(begin: V): Map<V, PathInfo<V, E>> {
+  private bellmanFord(begin: V): Map<V, PathInfo<V, E>> {
+    console.log('bellmanFord');
+    const beginVertex = this.vertices.get(begin); // 拿到起点
+    if (!beginVertex) return new Map();
 
+    const selectedPaths = new Map<V, PathInfo<V, E>>(); // 已经确认最短路径
+    selectedPaths.set(beginVertex.value, new PathInfo(this.weightManager.zero()));
+
+    const count = this.vertices.size - 1;
+    for (let i = 0; i < count; i++) { // v - 1 次
+      for (let edge of this.edges) {
+        const fromPath = selectedPaths.get(edge.from.value);
+        if (fromPath == null) continue;
+        this.relax(edge, fromPath, selectedPaths);
+      }
+    }
+    for (let edge of this.edges) {
+
+      const fromPath = selectedPaths.get(edge.from.value);
+      if (fromPath === undefined) continue;
+      if (this.relax(edge, fromPath, selectedPaths)) {
+        console.log("有负权环");
+        return new Map();
+      }
+    }
+
+    selectedPaths.delete(begin);
+    return selectedPaths;
+  }
+
+  /**
+	 * 松弛
+	 * @param edge 需要进行松弛的边
+	 * @param fromPath edge的from的最短路径信息
+	 * @param paths 存放着其他点（对于dijkstra来说，就是还没有离开桌面的点）的最短路径信息
+	 */
+  private relax(edge: Edge<V, E>, fromPath: PathInfo<V, E>, paths: Map<V, PathInfo<V, E>>): boolean {
+    // 新的可选择的最短路径：beginVertex到edge.from的最短路径 + edge.weight
+    const newWeight = this.weightManager.add(fromPath.weight!, edge.weight!);
+    // 以前的最短路径：beginVertex到edge.to的最短路径
+    let oldPath = paths.get(edge.to.value);
+    if (oldPath !== undefined && this.weightManager.compare(newWeight, oldPath.weight!) >= 0) return false;
+
+    if (oldPath == null) {
+      oldPath = new PathInfo();
+      paths.set(edge.to.value, oldPath);
+    } else {
+      oldPath.edgeInfos.clear();
+    }
+
+    oldPath.weight = newWeight;
+    // 将最新的路径保存在 pathInfo的edgeInfos中
+    for (let i = 0; i < fromPath.edgeInfos.length(); i++) {
+      const edgeInfo: EdgeInfo<V, E> = fromPath.edgeInfos.get(i);
+      oldPath.edgeInfos.add(edgeInfo);
+    }
+    oldPath.edgeInfos.add(edge.info());
+
+    return false;
+  }
+
+
+  private dijkstra(begin: V): Map<V, PathInfo<V, E>> {
+    console.log('dijkstra');
     const beginVertex = this.vertices.get(begin); // 拿到起点
     if (!beginVertex) return new Map();
 

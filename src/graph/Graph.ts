@@ -54,6 +54,10 @@ export class EdgeInfo<V, E> {
     this.to = to;
     this.weight = weight;
   };
+
+  toString(): string {
+    return "EdgeInfo [from=" + this.from + ", to=" + this.to + ", weight=" + this.weight + "]";
+  }
 }
 
 export class PathInfo<V, E> {

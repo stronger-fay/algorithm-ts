@@ -14,6 +14,9 @@ class EdgeInfo {
         this.weight = weight;
     }
     ;
+    toString() {
+        return "EdgeInfo [from=" + this.from + ", to=" + this.to + ", weight=" + this.weight + "]";
+    }
 }
 exports.EdgeInfo = EdgeInfo;
 class PathInfo {

@@ -31,7 +31,7 @@ testSP();
 
 
 function testSP() {
-  const graph: Graph<any, number> = directedGraph(Data.SP);
+  const graph: Graph<any, number> = directedGraph(Data.BF_SP);
 
   const sp: Map<any, PathInfo<any, number>> = graph.shortestPath("A");
   if (sp === undefined) return;

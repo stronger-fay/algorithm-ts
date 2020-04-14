@@ -28,7 +28,7 @@ const weightManager = {
 // testMst();
 testSP();
 function testSP() {
-    const graph = directedGraph(Data_1.Data.SP);
+    const graph = directedGraph(Data_1.Data.BF_SP);
     const sp = graph.shortestPath("A");
     if (sp === undefined)
         return;
