@@ -27,8 +27,13 @@ const weightManager: WeightManager<number> = {
 // testDfs();
 // testTopo();
 // testMst();
-testSP();
-
+// testSP();
+testSPs();
+function testSPs() {
+  const graph: Graph<any, number> = directedGraph(Data.SP);
+  const sps: Map<any, Map<any, PathInfo<any, number>>> = graph.shortestPaths();
+  console.log('sps: ', sps);
+}
 
 function testSP() {
   const graph: Graph<any, number> = directedGraph(Data.BF_SP);
@@ -42,7 +47,6 @@ function testSP() {
       const edge = path.edgeInfos.get(i);
       edges += edge;
     }
-
     console.log(v + " - " + path.weight + ' - ' + edges);
   });
 }

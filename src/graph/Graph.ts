@@ -24,7 +24,9 @@ export abstract class Graph<V, E> {
 
   abstract topologicalSort(): V[]; // 拓扑排序
 
-  abstract shortestPath(begin: V): Map<V, PathInfo<V, E>>; // 最短路径
+  abstract shortestPath(begin: V): Map<V, PathInfo<V, E>>; // 单源最短路径
+  abstract shortestPaths(): Map<V, Map<V, PathInfo<V, E>>>; // 多源最短路径
+
 }
 
 export interface VertexVisitor<V> {

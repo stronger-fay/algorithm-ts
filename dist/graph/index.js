@@ -26,7 +26,13 @@ const weightManager = {
 // testDfs();
 // testTopo();
 // testMst();
-testSP();
+// testSP();
+testSPs();
+function testSPs() {
+    const graph = directedGraph(Data_1.Data.SP);
+    const sps = graph.shortestPaths();
+    console.log('sps: ', sps);
+}
 function testSP() {
     const graph = directedGraph(Data_1.Data.BF_SP);
     const sp = graph.shortestPath("A");

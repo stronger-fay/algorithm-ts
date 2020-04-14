@@ -359,6 +359,66 @@ class ListGraph extends Graph_1.Graph {
         return edgeInfos;
     }
     /**
+     * Floyd 多源最短路径算法
+     */
+    shortestPaths() {
+        const paths = new Map();
+        // 初始化
+        for (let edge of this.edges) {
+            let map = paths.get(edge.from.value);
+            if (map === undefined) {
+                map = new Map();
+                paths.set(edge.from.value, map);
+            }
+            let pathInfo = new Graph_1.PathInfo(edge.weight);
+            pathInfo.edgeInfos.add(edge.info());
+            map.set(edge.to.value, pathInfo);
+        }
+        this.vertices.forEach((vertex2, v2) => {
+            this.vertices.forEach((vertex1, v1) => {
+                this.vertices.forEach((vertex3, v3) => {
+                    var _a;
+                    if (_.isEqual(v1, v2) || _.isEqual(v2, v3) || _.isEqual(v1, v3))
+                        return;
+                    // v1 -> v2
+                    const path12 = this.getPathInfo(v1, v2, paths);
+                    if (path12 === undefined)
+                        return;
+                    // v2 -> v3
+                    const path23 = this.getPathInfo(v2, v3, paths);
+                    if (path23 === undefined)
+                        return;
+                    // v1->v3
+                    let path13 = this.getPathInfo(v1, v3, paths);
+                    const newWeight = this.weightManager.add(path12.weight, path23.weight);
+                    if (path13 !== undefined && this.weightManager.compare(newWeight, path13.weight) >= 0)
+                        return;
+                    if (path13 === undefined) {
+                        path13 = new Graph_1.PathInfo();
+                        (_a = paths.get(v1)) === null || _a === void 0 ? void 0 : _a.set(v3, path13);
+                    }
+                    else {
+                        path13.edgeInfos.clear();
+                    }
+                    path13.weight = newWeight;
+                    for (let i = 0; i < path12.edgeInfos.length(); i++) {
+                        const edgeInfo = path12.edgeInfos.get(i);
+                        path13.edgeInfos.add(edgeInfo);
+                    }
+                    for (let i = 0; i < path23.edgeInfos.length(); i++) {
+                        const edgeInfo = path23.edgeInfos.get(i);
+                        path13.edgeInfos.add(edgeInfo);
+                    }
+                });
+            });
+        });
+        return paths;
+    }
+    getPathInfo(from, to, paths) {
+        const map = paths.get(from);
+        return map === undefined ? undefined : map.get(to);
+    }
+    /**
      * 单源最短路径
      * @param begin 起点
      */
