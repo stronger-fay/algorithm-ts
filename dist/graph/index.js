@@ -25,7 +25,26 @@ const weightManager = {
 // testBfs();
 // testDfs();
 // testTopo();
-testMst();
+// testMst();
+testSP();
+function testSP() {
+    const graph = directedGraph(Data_1.Data.SP);
+    const sp = graph.shortestPath("A");
+    if (sp === undefined)
+        return;
+    sp.forEach((path, v) => {
+        let edges = '';
+        for (let i = 0; i < path.edgeInfos.length(); i++) {
+            const edge = path.edgeInfos.get(i);
+            edges += edge;
+        }
+        console.log(v + " - " + path.weight + ' - ' + edges);
+    });
+}
+/**
+ * 最小生成树
+ * prim、kruskal
+ */
 function testMst() {
     const graph = undirectedGraph(Data_1.Data.MST_02);
     const infos = graph.mst();

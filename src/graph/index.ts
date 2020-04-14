@@ -1,5 +1,5 @@
 import { ListGraph } from './ListGraph';
-import { Graph, WeightManager, EdgeInfo } from './Graph';
+import { Graph, WeightManager, EdgeInfo, PathInfo } from './Graph';
 import { Data } from './Data';
 
 /**
@@ -26,8 +26,31 @@ const weightManager: WeightManager<number> = {
 // testBfs();
 // testDfs();
 // testTopo();
-testMst();
+// testMst();
+testSP();
 
+
+function testSP() {
+  const graph: Graph<any, number> = directedGraph(Data.SP);
+
+  const sp: Map<any, PathInfo<any, number>> = graph.shortestPath("A");
+  if (sp === undefined) return;
+  sp.forEach((path: PathInfo<any, number>, v: any) => {
+
+    let edges = '';
+    for (let i = 0; i < path.edgeInfos.length(); i++) {
+      const edge = path.edgeInfos.get(i);
+      edges += edge;
+    }
+
+    console.log(v + " - " + path.weight + ' - ' + edges);
+  });
+}
+
+/**
+ * 最小生成树
+ * prim、kruskal
+ */
 function testMst(): void {
   const graph: Graph<any, number> = undirectedGraph(Data.MST_02);
   const infos: Set<EdgeInfo<any, number>> = graph.mst();

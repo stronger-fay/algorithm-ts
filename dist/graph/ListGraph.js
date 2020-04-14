@@ -18,8 +18,12 @@ class ListGraph extends Graph_1.Graph {
         this.vertices = new Map(); // 存放所有的顶点
         this.edges = new Set(); // 存放所有顶点的所有边
         this.edgeComparator = new base_1.Comparator((e1, e2) => {
-            // console.log(`\ne1(${e1}) ? e2(${e2}) = ${this.weightManager.compare(e1.weight, e2.weight) || 0}`)
-            return this.weightManager.compare(e1.weight, e2.weight) || 0; // 比较失败，则返回0
+            if (e1.weight !== undefined && e2.weight !== undefined) {
+                return this.weightManager.compare(e1.weight, e2.weight);
+            }
+            else {
+                return 0;
+            }
         });
     }
     /**
@@ -325,12 +329,12 @@ class ListGraph extends Graph_1.Graph {
                 continue; // 过滤已经添加的顶点
             edgeInfos.add(edge.info());
             addedVertices.add(edge.to);
-            for (const nextEdge of edge.to.outEdges) {
+            // 并最短路径的目标顶点 to 的所有出度 outEdges，加入到最小堆，保证下次从堆中 remove 出来的是最小权重的edge
+            for (const nextEdge of edge.to.outEdges) { // heap.addAll(edge.to.outEdges); 
                 if (!addedVertices.has(nextEdge.to)) {
                     heap.add(nextEdge);
                 }
             }
-            // heap.addAll(edge.to.outEdges); // 并最短路径的目标顶点 to 的所有出度 outEdges，加入到最小堆，保证下次从堆中 remove 出来的是最小权重的edge
         }
         return edgeInfos;
     }
@@ -353,6 +357,80 @@ class ListGraph extends Graph_1.Graph {
             uf.union(edge.from, edge.to);
         }
         return edgeInfos;
+    }
+    /**
+     * 单源最短路径
+     * @param begin 起点
+     */
+    shortestPath(begin) {
+        return this.dijkstra(begin);
+    }
+    dijkstra(begin) {
+        const beginVertex = this.vertices.get(begin); // 拿到起点
+        if (!beginVertex)
+            return new Map();
+        const paths = new Map(); // begin 到各个点的的最短路径;例如: {'B': 50, 'C': 60};
+        const selectedPaths = new Map(); // 已经确认最短路径
+        paths.set(beginVertex, new Graph_1.PathInfo(this.weightManager.zero()));
+        while (paths.size !== 0) {
+            let minEntry = this.getMinPath(paths);
+            // minVertex离开桌面
+            const minVertex = minEntry.value[0];
+            const minPathInfo = minEntry.value[1];
+            selectedPaths.set(minVertex.value, minPathInfo);
+            paths.delete(minVertex);
+            // 对它的minVertex的outEdges进行松弛操作
+            for (const edge of minVertex.outEdges) {
+                // 如果edge.to已经离开桌面，就没必要进行松弛操作
+                if (selectedPaths.has(edge.to.value))
+                    continue;
+                this.relaxForDijkstra(edge, minPathInfo, paths);
+            }
+        }
+        selectedPaths.delete(begin);
+        return selectedPaths;
+    }
+    relaxForDijkstra(edge, fromPath, paths) {
+        // 新的可选择的最短路径：beginVertex到edge.from的最短路径 + edge.weight
+        const newWeight = this.weightManager.add(fromPath.weight, edge.weight);
+        // 以前的最短路径：beginVertex到edge.to的最短路径
+        let oldPath = paths.get(edge.to);
+        // 如果新的路径，比老的路径还长，则return
+        if (oldPath !== undefined && this.weightManager.compare(newWeight, oldPath.weight) >= 0)
+            return;
+        if (oldPath === undefined) { // 如果以前不存在路径信息，则添加一个新的pathInfo
+            oldPath = new Graph_1.PathInfo();
+            paths.set(edge.to, oldPath);
+        }
+        else { // 存在pathInfo，则开始更新所有的路径信息，先清空 edgeInfos
+            oldPath.edgeInfos.clear();
+        }
+        // 保存最新的路径长度
+        oldPath.weight = newWeight;
+        // 将最新的路径保存在 pathInfo的edgeInfos中
+        for (let i = 0; i < fromPath.edgeInfos.length(); i++) {
+            const edgeInfo = fromPath.edgeInfos.get(i);
+            oldPath.edgeInfos.add(edgeInfo);
+        }
+        oldPath.edgeInfos.add(edge.info());
+    }
+    getMinPath(paths) {
+        let iter = paths[Symbol.iterator]();
+        let minEntry = iter && iter.next();
+        let entry = iter.next();
+        while (!entry.done) {
+            if (entry.value !== undefined) {
+                const pathInfo = entry.value[1];
+                const minPathInfo = minEntry.value[1];
+                if (pathInfo.weight) {
+                    if (this.weightManager.compare(pathInfo.weight, minPathInfo.weight) < 0) {
+                        minEntry = entry;
+                    }
+                }
+            }
+            entry = iter.next();
+        }
+        return minEntry;
     }
 }
 exports.ListGraph = ListGraph;

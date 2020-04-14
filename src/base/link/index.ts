@@ -2,6 +2,11 @@ import { LinkedList } from './LinkedList';
 import { List } from './List';
 import { Asserts } from '../../tools';
 
+export {
+  LinkedList,
+  List,
+};
+
 function testList(list: List<number>): void {
   list.add(11);
   list.add(22);

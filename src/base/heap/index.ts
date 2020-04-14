@@ -2,8 +2,13 @@
 import { MaxHeap } from './MaxHeap';
 import { MinHeap } from './MinHeap';
 import { BinaryHeap } from './BinaryHeap';
-
 import { Comparator } from '../index';
+
+export {
+  BinaryHeap,
+  MaxHeap,
+  MinHeap,
+};
 
 function testMaxBinaryHeap() {
   console.log('testMaxBinaryHeap');
